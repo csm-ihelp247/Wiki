@@ -1,6 +1,8 @@
-https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-debian-11
+## Install MariaDB
+> https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-debian-11
 
-https://adoptium.net/de/installation/linux/#_deb_installation_on_debian_or_ubuntu
+## Install JRE 8
+> https://adoptium.net/de/installation/linux/#_deb_installation_on_debian_or_ubuntu
 
 
 # Pre-install
