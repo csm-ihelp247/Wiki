@@ -24,18 +24,16 @@ https://adoptium.net/de/installation/linux/#_deb_installation_on_debian_or_ubunt
 
 # Add Open-Xchange Repository
 
-`cat << EOF >> /etc/apt/sources.list.d/open-xchange.list
-deb https://software.open-xchange.com/products/appsuite/stable/appsuiteui/DebianBuster/ /
-deb https://software.open-xchange.com/products/appsuite/stable/backend/DebianBuster/ / 
-EOF`
+`nano /etc/apt/sources.list.d/open-xchange.list`
+deb https://software.open-xchange.com/products/appsuite/stable/appsuiteui/DebianBuster/ 
+deb https://software.open-xchange.com/products/appsuite/stable/backend/DebianBuster/ 
+
 
 
 
 # Updating repositories and install packages
 
-`apt update && apt-get install open-xchange open-xchange-authentication-database open-xchange-grizzly \
-  open-xchange-admin open-xchange-appsuite \
-  open-xchange-appsuite-backend open-xchange-appsuite-manifest`
+`apt update && apt-get install open-xchange open-xchange-authentication-database open-xchange-grizzly open-xchange-admin open-xchange-appsuite open-xchange-appsuite-backend open-xchange-appsuite-manifest`
 
 
 
@@ -53,9 +51,7 @@ EOF`
 
 ## Installer
 
-`/opt/open-xchange/sbin/oxinstaller --no-license \
---servername=suite --configdb-pass=(PASSWORD_REPLACE) \
---master-pass=(PASSWORD_REPLACE) --network-listener-host=localhost --servermemory 4096`
+`/opt/open-xchange/sbin/oxinstaller --no-license --servername=suite --configdb-pass=(PASSWORD_REPLACE) --master-pass=(PASSWORD_REPLACE) --network-listener-host=localhost --servermemory 4096`
 
 `systemctl restart open-xchange`
 
@@ -72,15 +68,13 @@ EOF`
 `mkdir /var/opt/filestore
 chown open-xchange:open-xchange /var/opt/filestore`
 
-`/opt/open-xchange/sbin/registerfilestore -A oxadminmaster -P (PASSWORD_REPLACE) \
--t file:/var/opt/filestore -s 1000000`
+`/opt/open-xchange/sbin/registerfilestore -A oxadminmaster -P (PASSWORD_REPLACE) -t file:/var/opt/filestore -s 1000000`
 
 
 
 # Register Database
 
-`/opt/open-xchange/sbin/registerdatabase -A oxadminmaster -P (PASSWORD_REPLACE) \
--n oxdatabase -p (PASSWORD_REPLACE) -m true`
+`/opt/open-xchange/sbin/registerdatabase -A oxadminmaster -P (PASSWORD_REPLACE) -n oxdatabase -p (PASSWORD_REPLACE) -m true`
 
 
 
