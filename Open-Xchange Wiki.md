@@ -25,8 +25,8 @@ https://adoptium.net/de/installation/linux/#_deb_installation_on_debian_or_ubunt
 # Add Open-Xchange Repository
 
 `nano /etc/apt/sources.list.d/open-xchange.list`
-deb https://software.open-xchange.com/products/appsuite/stable/appsuiteui/DebianBuster/ 
-deb https://software.open-xchange.com/products/appsuite/stable/backend/DebianBuster/ 
+- `deb https://software.open-xchange.com/products/appsuite/stable/appsuiteui/DebianBuster/ `
+- `deb https://software.open-xchange.com/products/appsuite/stable/backend/DebianBuster/ `
 
 
 
