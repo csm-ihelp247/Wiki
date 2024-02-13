@@ -94,14 +94,11 @@ https://oxpedia.org/wiki/index.php?title=AppSuite:Open-Xchange_Installation_Guid
 
 # Create Context and User
 
-`/opt/open-xchange/sbin/createcontext -A oxadminmaster -P (PASSWORD_REPLACE) -c 1 \
--u oxadmin -d "Context Admin" -g Admin -s User -p (PASSWORD_REPLACE) -L defaultcontext \
--e oxadmin@example.com -q 1024 --access-combination-name=groupware_standard`
+### Context
+`/opt/open-xchange/sbin/createcontext -A oxadminmaster -P (PASSWORD_REPLACE) -c 1 -u oxadmin -d "Context Admin" -g Admin -s User -p (PASSWORD_REPLACE) -L defaultcontext -e oxadmin@example.com -q 1024 --access-combination-name=groupware_standard`
 
-
-`/opt/open-xchange/sbin/createuser -c 1 -A oxadmin -P (PASSWORD_REPLACE) -u testuser \
--d "Test User" -g Test -s User -p secret -e testuser@example.com \
---imaplogin testuser --imapserver 127.0.0.1 --smtpserver 127.0.0.1`
+### Test User
+`/opt/open-xchange/sbin/createuser -c 1 -A oxadmin -P (PASSWORD_REPLACE) -u testuser -d "Test User" -g Test -s User -p secret -e testuser@example.com --imaplogin testuser --imapserver 127.0.0.1 --smtpserver 127.0.0.1`
 
 
 
