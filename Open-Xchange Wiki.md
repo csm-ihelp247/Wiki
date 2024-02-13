@@ -24,20 +24,18 @@ https://adoptium.net/de/installation/linux/#_deb_installation_on_debian_or_ubunt
 
 # Add Open-Xchange Repository
 
-cat << EOF >> /etc/apt/sources.list.d/open-xchange.list
-
+`cat << EOF >> /etc/apt/sources.list.d/open-xchange.list
 deb https://software.open-xchange.com/products/appsuite/stable/appsuiteui/DebianBuster/ /
 deb https://software.open-xchange.com/products/appsuite/stable/backend/DebianBuster/ / 
-
-EOF
+EOF`
 
 
 
 # Updating repositories and install packages
 
-apt update && apt-get install open-xchange open-xchange-authentication-database open-xchange-grizzly \
+`apt update && apt-get install open-xchange open-xchange-authentication-database open-xchange-grizzly \
   open-xchange-admin open-xchange-appsuite \
-  open-xchange-appsuite-backend open-xchange-appsuite-manifest
+  open-xchange-appsuite-backend open-xchange-appsuite-manifest`
 
 
 
