@@ -49,7 +49,7 @@ https://adoptium.net/de/installation/linux/#_deb_installation_on_debian_or_ubunt
 
 
 
-## Installer
+# OX Installer
 
 `/opt/open-xchange/sbin/oxinstaller --no-license --servername=suite --configdb-pass=(PASSWORD_REPLACE) --master-pass=(PASSWORD_REPLACE) --network-listener-host=localhost --servermemory 4096`
 
