@@ -3,7 +3,7 @@ https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-debia
 https://adoptium.net/de/installation/linux/#_deb_installation_on_debian_or_ubuntu
 
 
-## Pre-install
+# Pre-install
 hostname suite
 
 nano /etc/hosts
@@ -14,7 +14,7 @@ nano /etc/hostname
 
 
 
-## Importing the Open-Xchange Buildkey
+# Importing the Open-Xchange Buildkey
 
 wget https://software.open-xchange.com/0xDFD4BCF6-oxbuildkey.pub -O - | apt-key add -
 wget https://software.open-xchange.com/0xDFD4BCF6-oxbuildkey.pub
@@ -22,7 +22,7 @@ apt-key add - < 0xDFD4BCF6-oxbuildkey.pub
 
 
 
-## Add Open-Xchange Repository
+# Add Open-Xchange Repository
 
 cat << EOF >> /etc/apt/sources.list.d/open-xchange.list
 
@@ -33,7 +33,7 @@ EOF
 
 
 
-## Updating repositories and install packages
+# Updating repositories and install packages
 
 apt update && apt-get install open-xchange open-xchange-authentication-database open-xchange-grizzly \
   open-xchange-admin open-xchange-appsuite \
@@ -47,7 +47,7 @@ echo PATH=$PATH:/opt/open-xchange/sbin/ >> ~/.bashrc && . ~/.bashrc
 
 
 
-## Init ConfigDB
+# Init ConfigDB
 
 /opt/open-xchange/sbin/initconfigdb --configdb-pass=(PASSWORD_REPLACE) -a --mysql-root-passwd=(PASSWORD_REPLACE)
 
@@ -63,13 +63,13 @@ systemctl restart open-xchange
 
 
 
-## Register Server
+# Register Server
 
 /opt/open-xchange/sbin/registerserver -n suite -A oxadminmaster -P (PASSWORD_REPLACE)
 
 
 
-## Create and Register FileStore
+# Create and Register FileStore
 
 mkdir /var/opt/filestore
 chown open-xchange:open-xchange /var/opt/filestore
@@ -79,28 +79,28 @@ chown open-xchange:open-xchange /var/opt/filestore
 
 
 
-## Register Database
+# Register Database
 
 /opt/open-xchange/sbin/registerdatabase -A oxadminmaster -P (PASSWORD_REPLACE) \
 -n oxdatabase -p (PASSWORD_REPLACE) -m true
 
 
 
-## Configure Apache2 
+# Configure Apache2 
 
 a2enmod proxy proxy_http proxy_balancer expires deflate headers rewrite mime setenvif lbmethod_byrequests
 
 nano /etc/apache2/conf-available/proxy_http.conf
-- refer to Guide 
-### https://oxpedia.org/wiki/index.php?title=AppSuite:Open-Xchange_Installation_Guide_for_Debian_11.0
+- refer to Guide
+ https://oxpedia.org/wiki/index.php?title=AppSuite:Open-Xchange_Installation_Guide_for_Debian_11.0
 
 nano /etc/apache2/sites-enabled/000-default.conf
-- refer to Guide 
-### https://oxpedia.org/wiki/index.php?title=AppSuite:Open-Xchange_Installation_Guide_for_Debian_11.0
+- refer to Guide
+https://oxpedia.org/wiki/index.php?title=AppSuite:Open-Xchange_Installation_Guide_for_Debian_11.0
 
 
 
-## Create Context and User
+# Create Context and User
 
 /opt/open-xchange/sbin/createcontext -A oxadminmaster -P (PASSWORD_REPLACE) -c 1 \
 -u oxadmin -d "Context Admin" -g Admin -s User -p (PASSWORD_REPLACE) -L defaultcontext \
@@ -113,7 +113,7 @@ nano /etc/apache2/sites-enabled/000-default.conf
 
 
 
-## Add SSL - 
+# Add SSL - 
 ### https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-ubuntu-20-04
 
 apt install certbot python3-certbot-apache
