@@ -4,27 +4,27 @@ https://adoptium.net/de/installation/linux/#_deb_installation_on_debian_or_ubunt
 
 
 # Pre-install
-hostname suite
+`hostname suite`
 
-nano /etc/hosts
+`nano /etc/hosts`
 +   127.0.0.1     suite
 
-nano /etc/hostname
+`nano /etc/hostname`
 +   suite
 
 
 
 # Importing the Open-Xchange Buildkey
 
-wget https://software.open-xchange.com/0xDFD4BCF6-oxbuildkey.pub -O - | apt-key add -
-wget https://software.open-xchange.com/0xDFD4BCF6-oxbuildkey.pub
-apt-key add - < 0xDFD4BCF6-oxbuildkey.pub
+`wget https://software.open-xchange.com/0xDFD4BCF6-oxbuildkey.pub -O - | apt-key add -`
+`wget https://software.open-xchange.com/0xDFD4BCF6-oxbuildkey.pub`
+`apt-key add - < 0xDFD4BCF6-oxbuildkey.pub`
 
 
 
 # Add Open-Xchange Repository
 
-cat << EOF >> /etc/apt/sources.list.d/open-xchange.list
+`cat << EOF >> /etc/apt/sources.list.d/open-xchange.list
 
 deb https://software.open-xchange.com/products/appsuite/stable/appsuiteui/DebianBuster/ /
 deb https://software.open-xchange.com/products/appsuite/stable/backend/DebianBuster/ / 
