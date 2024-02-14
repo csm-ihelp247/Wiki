@@ -30,7 +30,10 @@
 
 # Importing the Open-Xchange Buildkey
 
+
 - `wget https://software.open-xchange.com/0xDFD4BCF6-oxbuildkey.pub -O - | apt-key add -`
+
+###If this command returns "OK", you're done importing the buildkey and can go on with the installation. In case that does not work, split it into two steps
 - `wget https://software.open-xchange.com/0xDFD4BCF6-oxbuildkey.pub`
 - `apt-key add - < 0xDFD4BCF6-oxbuildkey.pub`
 
@@ -38,7 +41,7 @@
 
 # Add Open-Xchange Repository
 
-`nano /etc/apt/sources.list.d/open-xchange.list`
+- `nano /etc/apt/sources.list.d/open-xchange.list`
 - `deb https://software.open-xchange.com/products/appsuite/stable/appsuiteui/DebianBuster/ `
 - `deb https://software.open-xchange.com/products/appsuite/stable/backend/DebianBuster/ `
 
