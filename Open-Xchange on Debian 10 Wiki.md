@@ -1,3 +1,15 @@
+# Pre-install
+`nano /etc/hosts`
++   127.0.0.1     suite
+-   Remove all IPv6 Entries   
+
+`nano /etc/hostname`
++   suite
+
+`hostname suite`
+
+
+
 # Install MariaDB
 
 - `sudo apt update`
@@ -13,18 +25,6 @@
 - `echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list`
 - `apt update`
 - `apt install temurin-8-jdk`
-
-
-
-# Pre-install
-`nano /etc/hosts`
-+   127.0.0.1     suite
--   Remove all IPv6 Entries   
-
-`nano /etc/hostname`
-+   suite
-
-`hostname suite`
 
 
 
