@@ -6,34 +6,149 @@ read -p "oxadminmaster Password: " oxadminmasterpass
 read -p "oxadmin Password: " oxadminpass
 read -p "Test Username: " testuser
 read -p "Test Password: " testpass
-read -p "Domain:" domain
-apt update
-apt install mariadb-server
+read -p "Hostname: " hostname
+read -p "IP Address: " ipaddress
+read -p "FQDN: " domain
+
+echo "-----------------------------------------------"
+echo "Editing Hosts and Hostname"
+echo "-----------------------------------------------"
+sleep 2
+
+rm /etc/hosts
+
+cat << EOF >> /etc/hosts
+127.0.0.1 localhost
+127.0.0.1 $hostname
+$ipaddress $hostname $domain
+EOF
+
+hostname $hostname
+
+rm /etc/hostname
+
+cat << EOF >> /etc/hostname
+$hostname
+EOF
+
+echo "-----------------------------------------------"
+echo "Fix Source File."
+echo "-----------------------------------------------"
+sleep 2
+
+rm /etc/apt/sources.list
+
+cat << EOF >> /etc/apt/sources.list
+deb http://deb.debian.org/debian/ $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main
+deb-src http://deb.debian.org/debian/ $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main
+
+deb http://security.debian.org/debian-security $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release)/updates main contrib
+deb-src http://security.debian.org/debian-security $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release)/updates main contrib
+EOF
+
+echo "-----------------------------------------------"
+echo "Install Database."
+echo "-----------------------------------------------"
+sleep 2
+
+apt update -y
+apt install mariadb-server -y
 mysql_secure_installation
+
 apt install -y wget apt-transport-https gpg
+
+echo "-----------------------------------------------"
+echo "Removing Adoptium Repos if already exists."
+echo "-----------------------------------------------"
+
+rm /etc/apt/sources.list.d/adoptium.list
+
+sleep 4
+
+echo "-----------------------------------------------"
+echo "Install Java 8."
+echo "-----------------------------------------------"
+sleep 4
+
 wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
 echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
-apt update
-apt install temurin-8-jre
+
+apt update -y
+apt install temurin-8-jre -y
+
+echo "-----------------------------------------------"
+echo "Add Open-Xchange GPG Keys."
+echo "-----------------------------------------------"
+sleep 4
+
 wget https://software.open-xchange.com/0xDFD4BCF6-oxbuildkey.pub -O - | apt-key add -
+
+echo "-----------------------------------------------"
+echo "Removing Open-Xchange Repos if they already exist."
+echo "Add Open-Xchange Repos."
+echo "-----------------------------------------------"
+
+rm /etc/apt/sources.list.d/open-xchange.list
+
+sleep 4
+
 cat << EOF >> /etc/apt/sources.list.d/open-xchange.list
 deb https://software.open-xchange.com/products/appsuite/stable/appsuiteui/DebianBullseye/ /
 deb https://software.open-xchange.com/products/appsuite/stable/backend/DebianBullseye/ / 
 EOF
-apt update
-apt-get install open-xchange open-xchange-authentication-database open-xchange-grizzly open-xchange-admin open-xchange-appsuite open-xchange-appsuite-backend open-xchange-appsuite-manifest
+
+echo "-----------------------------------------------"
+echo "Installing Open-Xchange."
+echo "-----------------------------------------------"
+sleep 4
+
+apt update -y
+apt install open-xchange open-xchange-authentication-database open-xchange-grizzly open-xchange-admin open-xchange-appsuite open-xchange-appsuite-backend open-xchange-appsuite-manifest -y
 echo PATH=$PATH:/opt/open-xchange/sbin/ >> ~/.bashrc && . ~/.bashrc
+
+echo "-----------------------------------------------"
+echo "Starting the Setup Process. This may take a moment."
+echo "-----------------------------------------------"
+sleep 4
+
 /opt/open-xchange/sbin/initconfigdb --configdb-pass=$configdbpass -a --mysql-root-passwd=$sqlrootpass
-/opt/open-xchange/sbin/oxinstaller --no-license --servername=suite --configdb-pass=$configdbpass --master-pass=$oxadminmasterpass --network-listener-host=localhost --servermemory 4096
-echo "Restarting Open-Xchange.. please wait 45 seconds."
+/opt/open-xchange/sbin/oxinstaller --no-license --servername=$hostname --configdb-pass=$configdbpass --master-pass=$oxadminmasterpass --network-listener-host=localhost --servermemory 4096
+
+echo "-----------------------------------------------"
+echo "Restarting Open-Xchange.. Please wait 45 seconds."
+echo "-----------------------------------------------"
 systemctl restart open-xchange
 sleep 45
-/opt/open-xchange/sbin/registerserver -n suite -A oxadminmaster -P $oxadminmasterpass
+
+echo "-----------------------------------------------"
+echo "Registering OX Server, FileStore, and Database."
+echo "-----------------------------------------------"
+sleep 4
+
+/opt/open-xchange/sbin/registerserver -n $hostname -A oxadminmaster -P $oxadminmasterpass
+
 mkdir /var/opt/filestore chown open-xchange:open-xchange /var/opt/filestore
 /opt/open-xchange/sbin/registerfilestore -A oxadminmaster -P $oxadminmasterpass -t file:/var/opt/filestore -s 1000000
+
 /opt/open-xchange/sbin/registerdatabase -A oxadminmaster -P $oxadminmasterpass -n oxdatabase -p $configdbpass -m true
+
+echo "-----------------------------------------------"
+echo "Configuring Apache Mods."
+echo "-----------------------------------------------"
+sleep 4
+
 a2enmod proxy proxy_http proxy_balancer expires deflate headers rewrite mime setenvif lbmethod_byrequests
+
+
+echo "-----------------------------------------------"
+echo "Configuring proxy_http.conf and default site."
+echo "-----------------------------------------------"
+sleep 4
+
+rm /etc/apache2/conf-available/proxy_http.conf
+
 cat << EOF >> /etc/apache2/conf-available/proxy_http.conf
+
 <IfModule mod_proxy_http.c>
    ProxyRequests Off
    ProxyStatus On
@@ -140,9 +255,13 @@ cat << EOF >> /etc/apache2/conf-available/proxy_http.conf
   ProxyPass /Microsoft-Server-ActiveSync balancer://eas_oxcluster/Microsoft-Server-ActiveSync
 
 </IfModule>
+
 EOF
-mv /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/000-default.conf.bak
+
+rm /etc/apache2/sites-enabled/000-default.conf
+
 cat << EOF >> /etc/apache2/sites-enabled/000-default.conf
+
 <VirtualHost *:80>
        ServerAdmin webmaster@localhost
 
@@ -160,8 +279,23 @@ cat << EOF >> /etc/apache2/sites-enabled/000-default.conf
                AllowOverride Indexes FileInfo
        </Directory>
 </VirtualHost>
+
 EOF
+
 a2enconf proxy_http.conf
+
+echo "-----------------------------------------------"
+echo "Restarting Apache and Installing Certbot."
+echo "-----------------------------------------------"
+sleep 4
+
 systemctl restart apache2
-apt install certbot python3-certbot-apache
-certbot --apache -d $domain
+
+apt install certbot python3-certbot-apache -y
+
+echo "-----------------------------------------------"
+echo "Running Certbot to generate SSL Cert."
+echo "-----------------------------------------------"
+sleep 4
+
+certbot --apache -d $domain 
