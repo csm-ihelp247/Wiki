@@ -17,14 +17,14 @@
 
 
 # Pre-install
-`hostname suite`
-
 `nano /etc/hosts`
 +   127.0.0.1     suite
 -   Remove all IPv6 Entries   
 
 `nano /etc/hostname`
 +   suite
+
+`hostname suite`
 
 
 
