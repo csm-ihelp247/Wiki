@@ -60,10 +60,9 @@ apt install -y wget apt-transport-https gpg
 echo "-----------------------------------------------"
 echo "Removing Adoptium Repos if already exists."
 echo "-----------------------------------------------"
+sleep 4
 
 rm /etc/apt/sources.list.d/adoptium.list
-
-sleep 4
 
 echo "-----------------------------------------------"
 echo "Install Java 8."
@@ -87,10 +86,9 @@ echo "-----------------------------------------------"
 echo "Removing Open-Xchange Repos if they already exist."
 echo "Add Open-Xchange Repos."
 echo "-----------------------------------------------"
+sleep 4
 
 rm /etc/apt/sources.list.d/open-xchange.list
-
-sleep 4
 
 cat << EOF >> /etc/apt/sources.list.d/open-xchange.list
 deb https://software.open-xchange.com/products/appsuite/stable/appsuiteui/DebianBullseye/ /
@@ -103,7 +101,7 @@ echo "-----------------------------------------------"
 sleep 4
 
 apt update -y
-apt install open-xchange open-xchange-authentication-database open-xchange-grizzly open-xchange-admin open-xchange-appsuite open-xchange-appsuite-backend open-xchange-appsuite-manifest -y
+apt install open-xchange open-xchange-authentication-database open-xchange-grizzly open-xchange-admin open-xchange-appsuite open-xchange-appsuite-backend open-xchange-appsuite-manifest open-xchange-authentication-imap open-xchange-authorization-standard open-xchange-passwordchange-script -y
 echo PATH=$PATH:/opt/open-xchange/sbin/ >> ~/.bashrc && . ~/.bashrc
 
 echo "-----------------------------------------------"
