@@ -33,7 +33,7 @@
 
 - `wget https://software.open-xchange.com/0xDFD4BCF6-oxbuildkey.pub -O - | apt-key add -`
 
-###If this command returns "OK", you're done importing the buildkey and can go on with the installation. In case that does not work, split it into two steps
+### If this command returns "OK", you're done importing the buildkey and can go on with the installation. In case that does not work, split it into two steps
 - `wget https://software.open-xchange.com/0xDFD4BCF6-oxbuildkey.pub`
 - `apt-key add - < 0xDFD4BCF6-oxbuildkey.pub`
 
