@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo Open-Xchange Install Script. Please fill out the following and well do everything else. 
+echo "Open-Xchange Install Script. Please fill out the following and well do everything else."
 
 read -p 'SQL Root Password: ' sqlrootpass
 read -p 'configdb Password: ' configdbpass
@@ -40,7 +40,7 @@ echo PATH=$PATH:/opt/open-xchange/sbin/ >> ~/.bashrc && . ~/.bashrc
 
 /opt/open-xchange/sbin/oxinstaller --no-license --servername=suite --configdb-pass=$configdbpass --master-pass=$oxadminmasterpass --network-listener-host=localhost --servermemory 4096
 
-echo Restarting Open-Xchange.. please wait 45 seconds.
+echo "Restarting Open-Xchange.. please wait 45 seconds."
 
 systemctl restart open-xchange
 sleep 45
