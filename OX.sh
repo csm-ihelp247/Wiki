@@ -1,7 +1,5 @@
 #!/bin/bash
-
 echo "Open-Xchange Install Script. Please fill out the following and well do everything else."
-
 read -p 'SQL Root Password: ' sqlrootpass
 read -p 'configdb Password: ' configdbpass
 read -p 'oxadminmaster Password: ' oxadminmasterpass
@@ -9,53 +7,33 @@ read -p 'oxadmin Password: ' oxadminpass
 read -p 'Test Username: ' testuser
 read -p 'Test Password: ' testpass
 read -p 'Domain: ' domain
-
-
 sudo apt update
 apt install mariadb-server
 mysql_secure_installation
-
 apt install -y wget apt-transport-https gpg
 wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
 echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
 apt update
 apt install temurin-8-jre
-
 wget https://software.open-xchange.com/0xDFD4BCF6-oxbuildkey.pub -O - | apt-key add -
-
 cat << EOF >> /etc/apt/sources.list.d/open-xchange.list
-
 deb https://software.open-xchange.com/products/appsuite/stable/appsuiteui/DebianBullseye/ /
 deb https://software.open-xchange.com/products/appsuite/stable/backend/DebianBullseye/ / 
-
 EOF
-
 apt update
 apt-get install open-xchange open-xchange-authentication-database open-xchange-grizzly open-xchange-admin open-xchange-appsuite open-xchange-appsuite-backend open-xchange-appsuite-manifest
-
 echo PATH=$PATH:/opt/open-xchange/sbin/ >> ~/.bashrc && . ~/.bashrc
-
-
 /opt/open-xchange/sbin/initconfigdb --configdb-pass=$configdbpass -a --mysql-root-passwd=$sqlrootpass
-
 /opt/open-xchange/sbin/oxinstaller --no-license --servername=suite --configdb-pass=$configdbpass --master-pass=$oxadminmasterpass --network-listener-host=localhost --servermemory 4096
-
 echo "Restarting Open-Xchange.. please wait 45 seconds."
-
 systemctl restart open-xchange
 sleep 45
-
 /opt/open-xchange/sbin/registerserver -n suite -A oxadminmaster -P $oxadminmasterpass
-
 mkdir /var/opt/filestore chown open-xchange:open-xchange /var/opt/filestore
 /opt/open-xchange/sbin/registerfilestore -A oxadminmaster -P $oxadminmasterpass -t file:/var/opt/filestore -s 1000000
-
 /opt/open-xchange/sbin/registerdatabase -A oxadminmaster -P $oxadminmasterpass -n oxdatabase -p $configdbpass -m true
-
 a2enmod proxy proxy_http proxy_balancer expires deflate headers rewrite mime setenvif lbmethod_byrequests
-
 cat << EOF >> /etc/apache2/conf-available/proxy_http.conf
-
 <IfModule mod_proxy_http.c>
    ProxyRequests Off
    ProxyStatus On
@@ -162,13 +140,9 @@ cat << EOF >> /etc/apache2/conf-available/proxy_http.conf
   ProxyPass /Microsoft-Server-ActiveSync balancer://eas_oxcluster/Microsoft-Server-ActiveSync
 
 </IfModule>
-
 EOF
-
 mv /etc/apache2/sites-enabled/000-default.conf /etc/apache2/sites-enabled/000-default.conf.bak
-
 cat << EOF >> /etc/apache2/sites-enabled/000-default.conf
-
 <VirtualHost *:80>
        ServerAdmin webmaster@localhost
 
@@ -186,11 +160,8 @@ cat << EOF >> /etc/apache2/sites-enabled/000-default.conf
                AllowOverride Indexes FileInfo
        </Directory>
 </VirtualHost>
-
 EOF
-
 a2enconf proxy_http.conf
 systemctl restart apache2
-
 apt install certbot python3-certbot-apache
 certbot --apache -d $domain
