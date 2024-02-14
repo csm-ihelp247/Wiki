@@ -1,13 +1,13 @@
 #!/bin/bash
 echo "Open-Xchange Install Script. Please fill out the following and well do everything else."
-read -p 'SQL Root Password: ' sqlrootpass
-read -p 'configdb Password: ' configdbpass
-read -p 'oxadminmaster Password: ' oxadminmasterpass
-read -p 'oxadmin Password: ' oxadminpass
-read -p 'Test Username: ' testuser
-read -p 'Test Password: ' testpass
-read -p 'Domain: ' domain
-sudo apt update
+read -p "SQL Root Password: " sqlrootpass
+read -p "configdb Password: " configdbpass
+read -p "oxadminmaster Password: " oxadminmasterpass
+read -p "oxadmin Password: " oxadminpass
+read -p "Test Username: " testuser
+read -p "Test Password: " testpass
+read -p "Domain:" domain
+apt update
 apt install mariadb-server
 mysql_secure_installation
 apt install -y wget apt-transport-https gpg
